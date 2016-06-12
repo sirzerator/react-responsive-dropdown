@@ -1,6 +1,6 @@
 # React responsive dropdown #
 
-Show a dropdown / popover for desktop and overlay for mobile
+[See demo](http://gerhardsletten.github.io/react-responsive-dropdown/)
 
 ## Install ##
 
