@@ -22,15 +22,16 @@ const styles = {
     left: 0,
     right: 0,
     top: 0,
-    bottom: 0
+    height: '100%',
+    zIndex: 5000
   },
   overlayMobileBackground: {
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0,
     top: 0,
-    background: 'rgba(0%, 0%, 0%, .1)',
+    bottom: 0,
+    background: 'rgba(0%, 0%, 0%, .86)',
     zIndex: 1
   },
   overlayMobileHolder: {
@@ -78,7 +79,7 @@ function getPlacement (element, window, width) {
 
 function styleForOverlay (element, window, width, isMobile, bg, borderColor, borderRadius, borderWidth, arrowSize) {
   if (isMobile) {
-    return styles.overlayMobile
+    return Object.assign({}, styles.overlayMobile, {height: window.height})
   }
   const baseProps = Object.assign({}, styles.overlay, {
     backgroundColor: bg,
