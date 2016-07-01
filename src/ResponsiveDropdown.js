@@ -31,7 +31,7 @@ const styles = {
     right: 0,
     top: 0,
     bottom: 0,
-    background: 'rgba(0%, 0%, 0%, .86)',
+    background: 'rgba(0%, 0%, 0%, .75)',
     zIndex: 1
   },
   overlayMobileHolder: {
@@ -60,109 +60,30 @@ const styles = {
     borderColor: 'rgba(136, 183, 213, 0)',
     borderBottomColor: '#fff',
     borderWidth: 10
+  },
+  overlayCrossLeft: {
+    width: 1,
+    backgroundColor: '#fff',
+    height: 20,
+    position: 'absolute',
+    top: 10,
+    right: 20,
+    transform: 'rotate(45deg)'
+  },
+  overlayCrossRight: {
+    width: 1,
+    backgroundColor: '#fff',
+    height: 20,
+    position: 'absolute',
+    top: 10,
+    right: 20,
+    transform: 'rotate(-45deg)'
   }
 }
 
 const POSITION_LEFT = 'left'
 const POSITION_RIGHT = 'right'
 const POSITION_CENTER = 'center'
-
-function getPlacement (element, window, width) {
-  if (element.x < width / 2) {
-    return POSITION_LEFT
-  }
-  if ((element.x + width) > window.width) {
-    return POSITION_RIGHT
-  }
-  return POSITION_CENTER
-}
-
-function styleForOverlay (element, window, width, isMobile, bg, borderColor, borderRadius, borderWidth, arrowSize) {
-  if (isMobile) {
-    return Object.assign({}, styles.overlayMobile, {height: window.height})
-  }
-  const baseProps = Object.assign({}, styles.overlay, {
-    backgroundColor: bg,
-    borderColor: borderColor,
-    borderRadius: borderRadius,
-    borderWidth: borderWidth,
-    top: arrowSize + borderWidth
-  })
-  switch (getPlacement(element, window, width)) {
-    case POSITION_LEFT:
-      return Object.assign({}, baseProps, {
-        width: width,
-        left: 0
-      })
-    case POSITION_RIGHT:
-      return Object.assign({}, baseProps, {
-        width: width,
-        left: 'auto',
-        right: 0
-      })
-    default:
-      return Object.assign({}, baseProps, {
-        width: width,
-        left: '50%',
-        marginLeft: `-${parseInt(width / 2, 10)}px`
-      })
-  }
-}
-
-function styleForArrow (element, window, width, borderColor, borderWidth, arrowSize) {
-  const baseProps = Object.assign({}, styles.arrow, {
-    borderBottomColor: borderColor,
-    borderWidth: (arrowSize + borderWidth) + 1,
-    marginTop: borderWidth * -1,
-    marginLeft: ((arrowSize + borderWidth) + borderWidth + 1) * -1
-  })
-  switch (getPlacement(element, window, width)) {
-    case POSITION_LEFT:
-      return Object.assign({}, baseProps, {
-        left: parseInt(element.width / 2, 10)
-      })
-    case POSITION_RIGHT:
-      return Object.assign({}, baseProps, {
-        left: 'auto',
-        marginRight: baseProps.marginLeft,
-        right: parseInt(element.width / 2, 10)
-      })
-    default:
-      return Object.assign({}, baseProps)
-  }
-}
-
-function styleForArrowInner (element, window, width, borderColor, borderWidth, arrowSize) {
-  const baseProps = Object.assign({}, styles.arrow, {
-    borderBottomColor: borderColor,
-    marginTop: -1,
-    borderWidth: arrowSize,
-    marginLeft: (arrowSize + borderWidth) * -1
-  })
-  switch (getPlacement(element, window, width)) {
-    case POSITION_LEFT:
-      return Object.assign({}, baseProps, {
-        left: parseInt(element.width / 2, 10)
-      })
-    case POSITION_RIGHT:
-      return Object.assign({}, baseProps, {
-        left: 'auto',
-        marginRight: baseProps.marginLeft,
-        right: parseInt(element.width / 2, 10)
-      })
-    default:
-      return Object.assign({}, baseProps)
-  }
-}
-
-function styleForInner (element, window, width = 200, bg, borderColor, borderWidth) {
-  return Object.assign({}, styles.overlayMobileHolderInner, {
-    width: Math.min(width, window.width),
-    backgroundColor: bg,
-    borderColor: borderColor,
-    borderWidth: borderWidth
-  })
-}
 
 class ResponsiveDropdown extends Component {
 
@@ -174,18 +95,140 @@ class ResponsiveDropdown extends Component {
     }
   }
 
+  getPlacement () {
+    const {element, size} = this.state
+    const {width} = this.props
+    if (element.x < width / 2) {
+      return POSITION_LEFT
+    }
+    if ((element.x + width) > size.width) {
+      return POSITION_RIGHT
+    }
+    return POSITION_CENTER
+  }
+
+  styleForOverlay () {
+    const {size} = this.state
+    const {width, backgroundColor, borderColor, borderRadius, borderWidth, arrowSize} = this.props
+    if (this.isMobile()) {
+      return Object.assign({}, styles.overlayMobile, {height: size.height})
+    }
+    const baseProps = Object.assign({}, styles.overlay, {
+      backgroundColor: backgroundColor,
+      borderColor: borderColor,
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      top: arrowSize + borderWidth
+    })
+    switch (this.getPlacement()) {
+      case POSITION_LEFT:
+        return Object.assign({}, baseProps, {
+          width: width,
+          left: 0
+        })
+      case POSITION_RIGHT:
+        return Object.assign({}, baseProps, {
+          width: width,
+          left: 'auto',
+          right: 0
+        })
+      default:
+        return Object.assign({}, baseProps, {
+          width: width,
+          left: '50%',
+          marginLeft: `-${parseInt(width / 2, 10)}px`
+        })
+    }
+  }
+
+  styleForArrow () {
+    const {element} = this.state
+    const {borderColor, borderWidth, arrowSize} = this.props
+    const baseProps = Object.assign({}, styles.arrow, {
+      borderBottomColor: borderColor,
+      borderWidth: (arrowSize + borderWidth) + 1,
+      marginTop: borderWidth * -1,
+      marginLeft: ((arrowSize + borderWidth) + borderWidth + 1) * -1
+    })
+    switch (this.getPlacement()) {
+      case POSITION_LEFT:
+        return Object.assign({}, baseProps, {
+          left: parseInt(element.width / 2, 10)
+        })
+      case POSITION_RIGHT:
+        return Object.assign({}, baseProps, {
+          left: 'auto',
+          marginRight: baseProps.marginLeft,
+          right: parseInt(element.width / 2, 10)
+        })
+      default:
+        return Object.assign({}, baseProps)
+    }
+  }
+
+  styleForArrowInner () {
+    const {element} = this.state
+    const {backgroundColor, borderWidth, arrowSize} = this.props
+    const baseProps = Object.assign({}, styles.arrow, {
+      borderBottomColor: backgroundColor,
+      marginTop: -1,
+      borderWidth: arrowSize,
+      marginLeft: (arrowSize + borderWidth) * -1
+    })
+    switch (this.getPlacement()) {
+      case POSITION_LEFT:
+        return Object.assign({}, baseProps, {
+          left: parseInt(element.width / 2, 10)
+        })
+      case POSITION_RIGHT:
+        return Object.assign({}, baseProps, {
+          left: 'auto',
+          marginRight: baseProps.marginLeft,
+          right: parseInt(element.width / 2, 10)
+        })
+      default:
+        return Object.assign({}, baseProps)
+    }
+  }
+
+  styleForInner () {
+    const {size} = this.state
+    const {width, backgroundColor, borderColor, borderWidth} = this.props
+    return Object.assign({}, styles.overlayMobileHolderInner, {
+      width: Math.min(width, size.width),
+      backgroundColor: backgroundColor,
+      borderColor: borderColor,
+      borderWidth: borderWidth
+    })
+  }
+
   componentDidMount () {
     this.getPosition()
     window.addEventListener('resize', throttle(() => this.getSize(), 500))
+    window.addEventListener('click', this.onWindowClick.bind(this))
+    this.visible = this.props.visible
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', this.getSize)
+    window.removeEventListener('resize', throttle(() => this.getSize(), 500))
+    window.removeEventListener('click', this.onWindowClick.bind(this))
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.visible !== prevProps.visible || this.props.cacheKey !== prevProps.cacheKey) {
       this.getPosition()
+    }
+    setTimeout(() => {
+      this.visible = this.props.visible
+    })
+  }
+
+  onWindowClick (event) {
+    if (this.refs.root) {
+      const domNode = this.refs.root
+      if (event.target !== domNode && !domNode.contains(event.target) && this.props.visible && this.visible && this.props.hideOnOutsideClick) {
+        this.handleClickOverlay()
+      }
     }
   }
 
@@ -230,29 +273,32 @@ class ResponsiveDropdown extends Component {
   }
 
   render () {
-    const {children, dropdownView, visible, width, backgroundColor, borderColor, borderRadius, borderWidth, arrowSize} = this.props
+    const {children, dropdownView, visible} = this.props
     if (!visible) {
       return React.Children.only(this.props.children)
     } else {
-      const {element, size} = this.state
+      const {element} = this.state
       return (
         <div ref='root' style={styles.holder}>
           {children}
           {element && (
             <div style={styles.overlayHolder}>
-              <div style={styleForOverlay(element, size, width, this.isMobile(), backgroundColor, borderColor, borderRadius, borderWidth, arrowSize)}>
+              <div style={this.styleForOverlay()}>
                 {this.isMobile() && (
                   <div style={styles.overlayMobileHolder}>
-                    <div style={styles.overlayMobileBackground} onClick={this.handleClickOverlay.bind(this)} />
-                    <div style={styleForInner(element, size, width, backgroundColor, borderColor, borderWidth)}>
+                    <div style={styles.overlayMobileBackground} onClick={this.handleClickOverlay.bind(this)}>
+                      <div style={styles.overlayCrossLeft} />
+                      <div style={styles.overlayCrossRight} />
+                    </div>
+                    <div style={this.styleForInner()}>
                       {dropdownView}
                     </div>
                   </div>
                 )}
                 {!this.isMobile() && (
                   <div>
-                    <div style={styleForArrow(element, size, width, borderColor, borderWidth, arrowSize)} />
-                    <div style={styleForArrowInner(element, size, width, backgroundColor, borderWidth, arrowSize)} />
+                    <div style={this.styleForArrow()} />
+                    <div style={this.styleForArrowInner()} />
                     {dropdownView}
                   </div>
                 )}
@@ -273,7 +319,8 @@ ResponsiveDropdown.defaultProps = {
   borderColor: '#ffffff',
   borderRadius: 4,
   borderWidth: 1,
-  arrowSize: 10
+  arrowSize: 10,
+  hideOnOutsideClick: true
 }
 
 ResponsiveDropdown.propTypes = {
@@ -288,7 +335,8 @@ ResponsiveDropdown.propTypes = {
   clickOverlay: PropTypes.func,
   borderRadius: PropTypes.number,
   borderWidth: PropTypes.number,
-  arrowSize: PropTypes.number
+  arrowSize: PropTypes.number,
+  hideOnOutsideClick: PropTypes.bool
 }
 
 export default ResponsiveDropdown
