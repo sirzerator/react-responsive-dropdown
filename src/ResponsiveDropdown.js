@@ -204,14 +204,16 @@ class ResponsiveDropdown extends Component {
 
   componentDidMount () {
     this.getPosition()
-    window.addEventListener('resize', throttle(() => this.getSize(), 500))
-    window.addEventListener('click', this.onWindowClick.bind(this))
+    console.log('componentDidMount')
+    global.addEventListener('resize', this.onResize)
+    global.addEventListener('click', this.onWindowClick)
     this.visible = this.props.visible
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', throttle(() => this.getSize(), 500))
-    window.removeEventListener('click', this.onWindowClick.bind(this))
+    console.log('componentWillUnmount')
+    global.removeEventListener('resize', this.onResize)
+    global.removeEventListener('click', this.onWindowClick)
   }
 
   componentDidUpdate (prevProps) {
@@ -223,13 +225,20 @@ class ResponsiveDropdown extends Component {
     })
   }
 
-  onWindowClick (event) {
+  onWindowClick = (event) => {
     if (this.refs.root) {
       const domNode = this.refs.root
       if (event.target !== domNode && !domNode.contains(event.target) && this.props.visible && this.visible && this.props.hideOnOutsideClick) {
         this.handleClickOverlay()
       }
     }
+  }
+
+  onResize = (event) => {
+    console.log('onResize')
+    throttle(() => {
+      this.getSize()
+    }, 500)
   }
 
   getPosition () {
@@ -248,17 +257,19 @@ class ResponsiveDropdown extends Component {
   }
 
   getSize (onlyReturn = false) {
-    const {size: {width, height}} = this.state
-    const {innerWidth, innerHeight} = window
-    const newSize = {
-      width: innerWidth,
-      height: innerHeight
-    }
-    if (onlyReturn) {
-      return newSize
-    }
-    if (width !== innerWidth || height !== innerHeight) {
-      this.setState({size: newSize})
+    if (this.refs.root) {
+      const {size: {width, height}} = this.state
+      const {innerWidth, innerHeight} = global
+      const newSize = {
+        width: innerWidth,
+        height: innerHeight
+      }
+      if (onlyReturn) {
+        return newSize
+      }
+      if (width !== innerWidth || height !== innerHeight) {
+        this.setState({size: newSize})
+      }
     }
   }
 
@@ -268,7 +279,7 @@ class ResponsiveDropdown extends Component {
     return size.width < breakpoint || width > size.width
   }
 
-  handleClickOverlay () {
+  handleClickOverlay = () => {
     this.props.clickOverlay && this.props.clickOverlay()
   }
 
@@ -286,7 +297,7 @@ class ResponsiveDropdown extends Component {
               <div style={this.styleForOverlay()}>
                 {this.isMobile() && (
                   <div style={styles.overlayMobileHolder}>
-                    <div style={styles.overlayMobileBackground} onClick={this.handleClickOverlay.bind(this)}>
+                    <div style={styles.overlayMobileBackground} onClick={this.handleClickOverlay}>
                       <div style={styles.overlayCrossLeft} />
                       <div style={styles.overlayCrossRight} />
                     </div>

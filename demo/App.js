@@ -14,15 +14,9 @@ export default class App extends Component {
     }
   }
 
-  handleToggle () {
+  handleToggle = () => {
     this.setState({
       itemProps: {...this.state.itemProps, visible: !this.state.itemProps.visible}
-    })
-  }
-
-  handleClickPosition (val, event) {
-    this.setState({
-      position: val
     })
   }
 
@@ -99,7 +93,7 @@ export default class App extends Component {
   renderLayoutControl (title, val, selected) {
     return (
       <div className='level-item'>
-        <a className={`tag is-medium ${(selected === val) ? 'is-dark' : 'is-success'}`} onClick={this.handleClickPosition.bind(this, val)}>{title}</a>
+        <a className={`tag is-medium ${(selected === val) ? 'is-dark' : 'is-success'}`} onClick={() => this.setState({position: val})}>{title}</a>
       </div>
     )
   }
@@ -117,7 +111,7 @@ export default class App extends Component {
                   <label className='label'>backgroundColor</label>
                 </div>
                 <div className='control'>
-                  <input className='input' type='color' value={itemProps.backgroundColor} onChange={this.handleChange.bind(this, 'backgroundColor')} />
+                  <input className='input' type='color' value={itemProps.backgroundColor} onChange={this.changeBackgroundColor} />
                 </div>
               </div>
               <div className='is-horizontal control'>
@@ -125,7 +119,7 @@ export default class App extends Component {
                   <label className='label'>borderColor</label>
                 </div>
                 <div className='control'>
-                  <input className='input' type='color' value={itemProps.borderColor} onChange={this.handleChange.bind(this, 'borderColor')} />
+                  <input className='input' type='color' value={itemProps.borderColor} onChange={this.changeBorderColor} />
                 </div>
               </div>
             </div>
@@ -135,7 +129,7 @@ export default class App extends Component {
                   <label className='label'>width</label>
                 </div>
                 <div className='control'>
-                  <input className='input-custom' type='range' value={itemProps.width} onChange={this.handleChangeNumber.bind(this, 'width')} min={100} max={1000} step={100} />
+                  <input className='input-custom' type='range' value={itemProps.width} onChange={this.changeWidth} min={100} max={1000} step={100} />
                 </div>
               </div>
               <div className='is-horizontal control'>
@@ -143,7 +137,7 @@ export default class App extends Component {
                   <label className='label'>arrowSize</label>
                 </div>
                 <div className='control'>
-                  <input className='input-custom' type='range' value={itemProps.arrowSize} onChange={this.handleChangeNumber.bind(this, 'arrowSize')} min={1} max={20} step={1} />
+                  <input className='input-custom' type='range' value={itemProps.arrowSize} onChange={this.changeArrowSize} min={1} max={20} step={1} />
                 </div>
               </div>
             </div>
@@ -153,7 +147,7 @@ export default class App extends Component {
                   <label className='label'>borderRadius</label>
                 </div>
                 <div className='control'>
-                  <input className='input-custom' type='range' value={itemProps.borderRadius} onChange={this.handleChangeNumber.bind(this, 'borderRadius')} min={0} max={15} step={1} />
+                  <input className='input-custom' type='range' value={itemProps.borderRadius} onChange={this.changeBorderRadius} min={0} max={15} step={1} />
                 </div>
               </div>
               <div className='is-horizontal control'>
@@ -161,7 +155,7 @@ export default class App extends Component {
                   <label className='label'>borderWidth</label>
                 </div>
                 <div className='control'>
-                  <input className='input-custom' type='range' value={itemProps.borderWidth} onChange={this.handleChangeNumber.bind(this, 'borderWidth')} min={1} max={20} step={1} />
+                  <input className='input-custom' type='range' value={itemProps.borderWidth} onChange={this.changeBorderWidth} min={1} max={20} step={1} />
                 </div>
               </div>
             </div>
@@ -169,6 +163,42 @@ export default class App extends Component {
         </div>
       </div>
     )
+  }
+
+  changeBackgroundColor = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'backgroundColor': event.target.value}
+    })
+  }
+
+  changeBorderColor = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'borderColor': event.target.value}
+    })
+  }
+
+  changeWidth = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'width': parseInt(event.target.value, 10)}
+    })
+  }
+
+  changeArrowSize = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'arrowSize': parseInt(event.target.value, 10)}
+    })
+  }
+
+  changeBorderRadius = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'borderRadius': parseInt(event.target.value, 10)}
+    })
+  }
+
+  changeBorderWidth = (event) => {
+    this.setState({
+      itemProps: {...this.state.itemProps, 'borderWidth': parseInt(event.target.value, 10)}
+    })
   }
 
   renderDropdown () {
@@ -183,9 +213,9 @@ export default class App extends Component {
               Lorem ipusm deja vu
             </div>
           )}
-          clickOverlay={this.handleToggle.bind(this)}
+          clickOverlay={this.handleToggle}
           >
-          <button className='button is-warning is-large' onClick={this.handleToggle.bind(this)}>{itemProps.visible ? 'Close' : 'Open'}</button>
+          <button className='button is-warning is-large' onClick={this.handleToggle}>{itemProps.visible ? 'Close' : 'Open'}</button>
         </ResponsiveDropdown>
       </div>
     )
