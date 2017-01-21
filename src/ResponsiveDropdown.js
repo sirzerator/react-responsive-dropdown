@@ -204,14 +204,12 @@ class ResponsiveDropdown extends Component {
 
   componentDidMount () {
     this.getPosition()
-    console.log('componentDidMount')
     global.addEventListener('resize', this.onResize)
     global.addEventListener('click', this.onWindowClick)
     this.visible = this.props.visible
   }
 
   componentWillUnmount () {
-    console.log('componentWillUnmount')
     global.removeEventListener('resize', this.onResize)
     global.removeEventListener('click', this.onWindowClick)
   }
@@ -226,16 +224,15 @@ class ResponsiveDropdown extends Component {
   }
 
   onWindowClick = (event) => {
-    if (this.refs.root) {
+    if (this.refs.root && this.props.visible && this.visible) {
       const domNode = this.refs.root
-      if (event.target !== domNode && !domNode.contains(event.target) && this.props.visible && this.visible && this.props.hideOnOutsideClick) {
+      if (event.target !== domNode && !domNode.contains(event.target) && this.props.hideOnOutsideClick) {
         this.handleClickOverlay()
       }
     }
   }
 
   onResize = (event) => {
-    console.log('onResize')
     throttle(() => {
       this.getSize()
     }, 500)

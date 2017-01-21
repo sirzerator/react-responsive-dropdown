@@ -10,7 +10,7 @@ export default class App extends Component {
     super(props)
     this.state = {
       position: 'left',
-      itemProps: {...ResponsiveDropdown.defaultProps, visible: true, hideOnOutsideClick: false}
+      itemProps: {...ResponsiveDropdown.defaultProps, visible: false, hideOnOutsideClick: false}
     }
   }
 
