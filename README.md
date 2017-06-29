@@ -12,7 +12,7 @@ And in your react-component...
 
 ```js
 import React, {Component} from 'react'
-import {ResponsiveDropdown} from 'react-responsive-dropdown'
+import ResponsiveDropdown from 'react-responsive-dropdown'
 
 class App extends Component {
   constructor (props) {
