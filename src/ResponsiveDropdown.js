@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import throttle from 'lodash.throttle'
 
 const styles = {
@@ -86,7 +87,6 @@ const POSITION_RIGHT = 'right'
 const POSITION_CENTER = 'center'
 
 class ResponsiveDropdown extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -224,8 +224,8 @@ class ResponsiveDropdown extends Component {
   }
 
   onWindowClick = (event) => {
-    if (this.refs.root && this.props.visible && this.visible) {
-      const domNode = this.refs.root
+    if (this.rootElement && this.props.visible && this.visible) {
+      const domNode = this.rootElement
       if (event.target !== domNode && !domNode.contains(event.target) && this.props.hideOnOutsideClick) {
         this.handleClickOverlay()
       }
@@ -239,8 +239,8 @@ class ResponsiveDropdown extends Component {
   }
 
   getPosition () {
-    if (this.refs.root) {
-      const domNode = this.refs.root
+    if (this.rootElement) {
+      const domNode = this.rootElement
       this.setState({
         element: {
           x: domNode.offsetLeft,
@@ -254,7 +254,7 @@ class ResponsiveDropdown extends Component {
   }
 
   getSize (onlyReturn = false) {
-    if (this.refs.root) {
+    if (this.rootElement) {
       const {size: {width, height}} = this.state
       const {innerWidth, innerHeight} = global
       const newSize = {
@@ -287,7 +287,10 @@ class ResponsiveDropdown extends Component {
     } else {
       const {element} = this.state
       return (
-        <div ref='root' style={styles.holder}>
+        <div
+          style={styles.holder}
+          ref={(element) => { this.rootElement = element }}
+        >
           {children}
           {element && (
             <div style={styles.overlayHolder}>

@@ -5,7 +5,6 @@ import npmPackage from '../package.json'
 import './style.css'
 
 export default class App extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -209,12 +208,12 @@ export default class App extends Component {
           {...itemProps}
           cacheKey={position}
           dropdownView={(
-            <div className='dropdown-content'>
+            <div className='app-dropdown-content'>
               Lorem ipusm deja vu
             </div>
           )}
           clickOverlay={this.handleToggle}
-          >
+        >
           <button className='button is-warning is-large' onClick={this.handleToggle}>{itemProps.visible ? 'Close' : 'Open'}</button>
         </ResponsiveDropdown>
       </div>
