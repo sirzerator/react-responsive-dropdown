@@ -1,6 +1,6 @@
 {
   "name": "react-responsive-dropdown",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Show a dropdown / popover for desktop and overlay for mobile",
   "main": "lib/ResponsiveDropdown.js",
   "scripts": {
