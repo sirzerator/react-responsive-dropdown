@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "lodash.throttle": "^4.1.1",
-    "prop-type": "0.0.1",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0"
   },
   "gh-pages-deploy": {
