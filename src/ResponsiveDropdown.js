@@ -109,7 +109,17 @@ class ResponsiveDropdown extends Component {
 
   styleForOverlay () {
     const {size} = this.state
-    const {width, backgroundColor, borderColor, borderRadius, borderWidth, arrowSize} = this.props
+    const {
+      arrowSize,
+      backgroundColor,
+      borderColor,
+      borderRadius,
+      borderWidth,
+      overlayOffsetTop,
+      overlayOffsetRight,
+      overlayOffsetLeft,
+      width
+    } = this.props
     if (this.isMobile()) {
       return Object.assign({}, styles.overlayMobile, {height: size.height})
     }
@@ -118,48 +128,55 @@ class ResponsiveDropdown extends Component {
       borderColor: borderColor,
       borderRadius: borderRadius,
       borderWidth: borderWidth,
-      top: arrowSize + borderWidth
+      top: arrowSize + borderWidth + overlayOffsetTop
     })
     switch (this.getPlacement()) {
       case POSITION_LEFT:
         return Object.assign({}, baseProps, {
           width: width,
-          left: 0
+          left: 0 + overlayOffsetLeft
         })
       case POSITION_RIGHT:
         return Object.assign({}, baseProps, {
           width: width,
           left: 'auto',
-          right: 0
+          right: 0 + overlayOffsetRight
         })
       default:
         return Object.assign({}, baseProps, {
           width: width,
           left: '50%',
-          marginLeft: `-${parseInt(width / 2, 10)}px`
+          marginLeft: `-${parseInt(width / 2, 10) + overlayOffsetLeft}px`
         })
     }
   }
 
   styleForArrow () {
     const {element} = this.state
-    const {borderColor, borderWidth, arrowSize} = this.props
+    const {
+      arrowOffsetLeft,
+      arrowOffsetRight,
+      arrowOffsetTop,
+      arrowSize,
+      borderColor,
+      borderWidth
+    } = this.props
     const baseProps = Object.assign({}, styles.arrow, {
       borderBottomColor: borderColor,
       borderWidth: (arrowSize + borderWidth) + 1,
-      marginTop: borderWidth * -1,
+      marginTop: borderWidth * -1 + arrowOffsetTop,
       marginLeft: ((arrowSize + borderWidth) + borderWidth + 1) * -1
     })
     switch (this.getPlacement()) {
       case POSITION_LEFT:
         return Object.assign({}, baseProps, {
-          left: parseInt(element.width / 2, 10)
+          left: parseInt(element.width / 2, 10) + arrowOffsetLeft
         })
       case POSITION_RIGHT:
         return Object.assign({}, baseProps, {
           left: 'auto',
           marginRight: baseProps.marginLeft,
-          right: parseInt(element.width / 2, 10)
+          right: parseInt(element.width / 2, 10) + arrowOffsetRight
         })
       default:
         return Object.assign({}, baseProps)
@@ -168,23 +185,30 @@ class ResponsiveDropdown extends Component {
 
   styleForArrowInner () {
     const {element} = this.state
-    const {backgroundColor, borderWidth, arrowSize} = this.props
+    const {
+      arrowOffsetLeft,
+      arrowOffsetRight,
+      arrowOffsetTop,
+      arrowSize,
+      backgroundColor,
+      borderWidth
+    } = this.props
     const baseProps = Object.assign({}, styles.arrow, {
       borderBottomColor: backgroundColor,
-      marginTop: -1,
+      marginTop: -1 + arrowOffsetTop,
       borderWidth: arrowSize,
       marginLeft: (arrowSize + borderWidth) * -1
     })
     switch (this.getPlacement()) {
       case POSITION_LEFT:
         return Object.assign({}, baseProps, {
-          left: parseInt(element.width / 2, 10)
+          left: parseInt(element.width / 2, 10) + arrowOffsetLeft
         })
       case POSITION_RIGHT:
         return Object.assign({}, baseProps, {
           left: 'auto',
           marginRight: baseProps.marginLeft,
-          right: parseInt(element.width / 2, 10)
+          right: parseInt(element.width / 2, 10) + arrowOffsetRight
         })
       default:
         return Object.assign({}, baseProps)
@@ -331,7 +355,13 @@ ResponsiveDropdown.defaultProps = {
   borderRadius: 4,
   borderWidth: 1,
   arrowSize: 10,
-  hideOnOutsideClick: true
+  hideOnOutsideClick: true,
+  overlayOffsetTop: 0,
+  overlayOffsetLeft: 0,
+  overlayOffsetRight: 0,
+  arrowOffsetTop: 0,
+  arrowOffsetLeft: 0,
+  arrowOffsetRight: 0
 }
 
 ResponsiveDropdown.propTypes = {
@@ -347,7 +377,13 @@ ResponsiveDropdown.propTypes = {
   borderRadius: PropTypes.number,
   borderWidth: PropTypes.number,
   arrowSize: PropTypes.number,
-  hideOnOutsideClick: PropTypes.bool
+  hideOnOutsideClick: PropTypes.bool,
+  overlayOffsetLeft: PropTypes.number,
+  overlayOffsetRight: PropTypes.number,
+  overlayOffsetTop: PropTypes.number,
+  arrowOffsetLeft: PropTypes.number,
+  arrowOffsetRight: PropTypes.number,
+  arrowOffsetTop: PropTypes.number
 }
 
 export default ResponsiveDropdown
